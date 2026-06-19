@@ -10,6 +10,7 @@ import { TarefaModel } from '../../models/tarefa.model';
 })
 export class TarefaListar {
   tarefas = signal<TarefaModel[]>([]);
+  tarefaService: any;
 
   ngOnInit() {
     this.carregarTarefas();
@@ -24,15 +25,15 @@ export class TarefaListar {
   })
 
   carregarTarefas(): void {
-    const tarefasString = localStorage.getItem("tarefas");
-    if (tarefasString === null) {
-      return;
-    }
-
-    const tarefasLista = JSON.parse(tarefasString) as TarefaModel[];
-
-    const tarefasOrdenadas = tarefasLista.sort((x, y) => x.descricao.localeCompare(y.descricao));
-    this.tarefas.set(tarefasOrdenadas);
+   this.tarefaService.listar().subscribe({
+    next: tarefas => {
+      const tarefasordenadas = tarefas.sort((x, y) => x.descripion.locatscompare())
+      this.tarefas.set(tarefaOrdenadas)
+    },
+    error: erro => {
+      console.error("Erro ao carregar as tarefas.", erro);
+      alert(Não foi possivel carregar as tarefas)}
+   })
   }
 
   apagar(id: string): void {
